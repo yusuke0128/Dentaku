@@ -1,0 +1,66 @@
+options
+{
+  static = false;
+}
+PARSER_BEGIN(Parser)
+package denntaku;
+import java.io.*;
+import java.awt.event.*;
+class Parser {
+      private ActionListener listener;
+      public void setActionListener(ActionListener a){
+          listener = a;
+      }
+      private void output(double value){
+          listener.actionPerformed(
+               new ActionEvent(this,
+                               ActionEvent.ACTION_PERFORMED,
+                               String.valueOf(value)));
+      }
+      
+}
+PARSER_END(Parser)
+TOKEN : {
+    <NUM : ["1"-"9"](<DIGIT>)*
+    | <DIGIT>"."(<DIGIT>)*>
+ |  <PLUSOP : "+" >
+ |  <MINUS : "-" >
+ |  <MULOP : "*" >
+ |  <DIV : "/" > 
+ |  <CLEAR : "C" >
+ |  <DIGIT : ["0"-"9"] >
+}
+SKIP : {
+    " " | "\n" | "\r" | "t"
+}
+public int start() :
+{
+    Token token;
+    double num;
+}
+{
+(token=<NUM> {num = Double.parseDouble(token.image);
+                 output(num);
+               }
+       (          <MULOP> token=<NUM> {num *= Double.parseDouble(token.image);
+                            output(num);
+       }
+     | 
+     
+       <DIV> token=<NUM> {num /= Double.parseDouble(token.image);
+                            output(num);
+       }
+     | 
+          <PLUSOP> token=<NUM> {num += Double.parseDouble(token.image);
+                            output(num);
+       }
+      
+     | 
+          <MINUS> token=<NUM> {num -= Double.parseDouble(token.image);
+                            output(num);
+                          }
+               )*
+     <CLEAR>     {return 0;   }           )*
+}
+
+
