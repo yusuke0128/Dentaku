@@ -63,5 +63,21 @@ class Main {
 		Parser parser = new Parser(keyboard);
 		parser.setActionListener(label.getActionListener());
 	}
+    while(true){
+    try{
+    parser.start();
+   }
+ catch(Exception e){
+ label.setText("ERROR");15
+ parser = new Parser(keyboard);
+ parser.setActionListener(label.getActionListener());
+ }
+catch(Error e){
+label.setText("ERROR");
+parser = new Parser(keyboard);
+parser.setActionListener(label.getActionListener());
+   }
+  }
+ }
 }
 
